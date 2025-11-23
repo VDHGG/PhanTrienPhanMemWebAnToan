@@ -1,0 +1,548 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Máy chủ: 127.0.0.1
+-- Thời gian đã tạo: Th10 19, 2025 lúc 06:25 PM
+-- Phiên bản máy phục vụ: 10.4.32-MariaDB
+-- Phiên bản PHP: 8.0.30
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Cơ sở dữ liệu: `shoe_store`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `carts`
+--
+
+CREATE TABLE `carts` (
+  `cart_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `carts`
+--
+
+INSERT INTO `carts` (`cart_id`, `user_id`, `created_at`) VALUES
+(1, 1, '2025-11-05 17:20:37'),
+(2, 2, '2025-11-05 17:20:37'),
+(3, 3, '2025-11-05 17:20:37'),
+(4, 4, '2025-11-05 17:20:37');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `cart_items`
+--
+
+CREATE TABLE `cart_items` (
+  `cart_item_id` int(11) NOT NULL,
+  `cart_id` int(11) DEFAULT NULL,
+  `product_id` int(11) DEFAULT NULL,
+  `quantity` int(11) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `cart_items`
+--
+
+INSERT INTO `cart_items` (`cart_item_id`, `cart_id`, `product_id`, `quantity`) VALUES
+(1, 1, 1, 2),
+(2, 2, 2, 1),
+(3, 3, 3, 3),
+(4, 4, 4, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `categories`
+--
+
+CREATE TABLE `categories` (
+  `category_id` int(11) NOT NULL,
+  `category_name` varchar(100) NOT NULL,
+  `description` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `categories`
+--
+
+INSERT INTO `categories` (`category_id`, `category_name`, `description`) VALUES
+(1, 'Giày thể thao', 'Các mẫu giày chạy bộ, sneaker năng động.'),
+(2, 'Quần áo thể thao', 'Trang phục thể thao thoáng mát.'),
+(3, 'Phụ kiện', 'Túi, mũ, vớ, dây buộc giày.'),
+(4, 'Giày cao cấp', 'Các dòng giày thương hiệu cao cấp.'),
+(5, 'Giày sandal', 'Giày sandal mang lại sự thoáng mát và thoải mái tối đa, phù hợp cho những chuyến đi biển, dạo phố hay hoạt động hàng ngày. Thiết kế nhẹ nhàng, dễ mang, dễ vệ sinh và đặc biệt phù hợp với thời tiết mùa hè.'),
+(6, 'Giày boots', 'Giày boots có khả năng giữ ấm tốt, bền bỉ và mạnh mẽ. Phù hợp sử dụng trong mùa đông hoặc khi đi du lịch đến những vùng khí hậu lạnh. Thiết kế đa dạng từ cổ thấp đến cổ cao, làm tăng sự cá tính và phong cách.'),
+(7, 'Quần thể thao', 'Quần thể thao được thiết kế từ chất liệu thoáng khí và co giãn linh hoạt, phù hợp cho các hoạt động chạy bộ, gym, yoga hoặc sinh hoạt hằng ngày. Mang lại cảm giác thoải mái và tự tin trong từng chuyển động.'),
+(8, 'Áo khoác thể thao', 'Áo khoác thể thao có khả năng chống gió, giữ ấm và thấm hút mồ hôi tốt. Thích hợp cho quá trình tập luyện ngoài trời hoặc sử dụng thời trang thường nhật. Thiết kế năng động, trẻ trung và dễ phối đồ.'),
+(9, 'Vớ thể thao', 'Vớ thể thao hỗ trợ bảo vệ bàn chân, tăng độ êm ái và thấm hút mồ hôi hiệu quả khi vận động. Chất liệu mềm mại, thoải mái, giúp hạn chế phồng rộp và mang lại trải nghiệm mang giày tốt hơn.'),
+(10, 'Balo thể thao', 'Balo thể thao có dung tích lớn và nhiều ngăn tiện dụng, phù hợp mang theo quần áo, phụ kiện tập luyện hoặc đồ dùng du lịch. Thiết kế chắc chắn, đeo êm vai và phong cách hiện đại, dễ sử dụng trong nhiều mục đích khác nhau.');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `orders`
+--
+
+CREATE TABLE `orders` (
+  `order_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `order_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `total_amount` decimal(10,2) DEFAULT NULL,
+  `status` enum('Pending','Confirmed','Shipped','Delivered','Cancelled') DEFAULT 'Pending',
+  `payment_method` enum('COD','QR') DEFAULT 'COD'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `orders`
+--
+
+INSERT INTO `orders` (`order_id`, `user_id`, `order_date`, `total_amount`, `status`, `payment_method`) VALUES
+(1, 1, '2025-11-05 17:20:37', 1800000.00, 'Pending', 'COD'),
+(2, 2, '2025-11-05 17:20:37', 2200000.00, 'Confirmed', 'COD'),
+(3, 3, '2025-11-05 17:20:37', 350000.00, 'Delivered', 'COD'),
+(4, 4, '2025-11-05 17:20:37', 450000.00, 'Delivered', 'COD'),
+(5, 1, '2025-11-06 15:01:39', 4000000.00, 'Pending', 'COD'),
+(6, 1, '2025-11-06 16:38:13', 2250000.00, 'Pending', 'COD'),
+(7, 1, '2025-11-07 08:41:34', 2150000.00, 'Delivered', 'COD'),
+(8, 5, '2025-11-12 18:06:46', 3550000.00, 'Shipped', 'COD'),
+(9, 6, '2025-11-16 19:32:42', 2200000.00, 'Delivered', 'COD');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `order_items`
+--
+
+CREATE TABLE `order_items` (
+  `order_item_id` int(11) NOT NULL,
+  `order_id` int(11) DEFAULT NULL,
+  `product_id` int(11) DEFAULT NULL,
+  `quantity` int(11) DEFAULT NULL,
+  `price` decimal(10,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `order_items`
+--
+
+INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `quantity`, `price`) VALUES
+(1, 1, 1, 1, 1800000.00),
+(2, 2, 2, 1, 2200000.00),
+(3, 3, 3, 1, 350000.00),
+(4, 4, 4, 1, 450000.00),
+(5, 5, 1, 1, 1800000.00),
+(6, 5, 2, 1, 2200000.00),
+(7, 6, 1, 1, 1800000.00),
+(8, 6, 4, 1, 450000.00),
+(9, 7, 3, 1, 350000.00),
+(10, 7, 1, 1, 1800000.00),
+(11, 8, 6, 1, 2800000.00),
+(12, 8, 9, 1, 200000.00),
+(13, 8, 18, 1, 550000.00),
+(14, 9, 2, 1, 2200000.00);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `posts`
+--
+
+CREATE TABLE `posts` (
+  `post_id` int(11) NOT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `content` text DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `posts`
+--
+
+INSERT INTO `posts` (`post_id`, `title`, `content`, `image`, `created_at`) VALUES
+(1, 'Sale Cuối Năm', 'Giảm giá lên đến 50% tất cả các sản phẩm', 'images/blog1.jpg', '2025-11-05 17:20:37'),
+(2, 'Mẹo Bảo Quản Giày', 'Giữ giày luôn như mới với 5 bước đơn giản', 'images/blog1.jpg', '2025-11-05 17:20:37'),
+(3, 'Bộ Sưu Tập Mới', 'Ra mắt BST Xuân 2025 với thiết kế hiện đại', 'images/blog1.jpg', '2025-11-05 17:20:37'),
+(4, 'Hướng Dẫn Chọn Size', 'Chọn size giày chuẩn theo từng dáng chân', 'images/blog1.jpg', '2025-11-05 17:20:37'),
+(5, 'BST Mùa Đông 2025- Siuu Ấm áp', 'Khám phá những đôi giày giữ ấm và thời trang cho mùa đông năm nay.', 'images/blog1.jpg', '2025-11-12 16:49:40'),
+(6, 'Giày Sneaker – Xu Hướng Bất Tận', 'Sneaker vẫn luôn là biểu tượng thời trang không bao giờ lỗi mốt.', 'images/blog1.jpg', '2025-11-12 16:49:40'),
+(7, 'Mix Đồ Với Giày Trắng - Thời thượng', 'Hướng dẫn phối giày trắng với mọi outfit từ casual đến thanh lịch.', 'images/blog1.jpg', '2025-11-12 16:49:40'),
+(8, 'Ưu Đãi Thành Viên NEM - Siêu giảm giá', 'Thành viên NEM được giảm 10% khi mua hàng trực tuyến.', 'images/blog1.jpg', '2025-11-12 16:49:40'),
+(9, 'Cách Bảo Quản Giày Da', 'Giày da cần được chăm sóc đúng cách để luôn bóng đẹp và bền lâu.', 'images/blog1.jpg', '2025-11-12 16:49:40'),
+(10, 'Top 5 Giày Chạy Bộ Hot Nhất', 'Danh sách những đôi giày chạy bộ đáng mua nhất 2025.', 'images/blog1.jpg', '2025-11-12 16:49:40'),
+(11, 'Giày Cao Cấp – Đẳng Cấp Khác Biệt', 'Khám phá dòng giày sang trọng từ Gucci, LV và Prada.', 'images/blog1.jpg', '2025-11-12 16:49:40'),
+(12, 'Hướng Dẫn Làm Sạch Giày Sneaker', 'Cách giặt sneaker đúng cách giúp giữ form và màu sắc bền lâu.', 'images/blog1.jpg', '2025-11-12 16:49:40'),
+(13, 'Flash Sale Cuối Tuần', 'Chương trình giảm giá cực khủng chỉ diễn ra 2 ngày cuối tuần này!', 'images/blog1.jpg', '2025-11-12 16:49:40'),
+(14, 'Phong Cách Streetwear Với NEM', 'Kết hợp giày thể thao cùng outfit streetwear để tạo phong cách riêng.', 'images/blog1.jpg', '2025-11-12 16:49:40');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `products`
+--
+
+CREATE TABLE `products` (
+  `product_id` int(11) NOT NULL,
+  `category_id` int(11) DEFAULT NULL,
+  `name` varchar(100) NOT NULL,
+  `description` text NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `discount` decimal(10,2) DEFAULT 0.00,
+  `stock` int(11) DEFAULT 0,
+  `image` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `avg_rating` decimal(3,2) DEFAULT 0.00,
+  `provider` varchar(255) DEFAULT NULL,
+  `sizes` varchar(255) DEFAULT 'S,M,L,XL,XXL,XXXL',
+  `colors` varchar(255) DEFAULT 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu',
+  `gender` enum('Nam','Nữ','Unisex') DEFAULT 'Unisex'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `products`
+--
+
+INSERT INTO `products` (`product_id`, `category_id`, `name`, `description`, `price`, `discount`, `stock`, `image`, `created_at`, `avg_rating`, `provider`, `sizes`, `colors`, `gender`) VALUES
+(1, 1, 'Giày Adidas Runfalcon', 'Giày chạy bộ nhẹ, đế bám tốt.', 1800000.00, 10.00, 20, 'images/adidas1.jpg', '2025-11-05 17:20:37', 1.00, 'Adidas', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex'),
+(2, 1, 'Giày Nike Revolution 6', 'Thiết kế năng động, mang lại cảm giác thoải mái.', 2200000.00, 20.00, 15, 'images/adidas2.jpg', '2025-11-05 17:20:37', 2.00, 'Nike', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex'),
+(3, 2, 'Áo Thun NEM Basic', 'Áo cotton thoáng mát, form rộng.', 350000.00, 30.00, 50, 'images/adidas3.jpg', '2025-11-05 17:20:37', 3.00, 'NEM', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex'),
+(4, 3, 'Túi Tote NEM Classic', 'Túi canvas cao cấp, tiện dụng hàng ngày.', 450000.00, 40.00, 30, 'images/adidas4.jpg', '2025-11-05 17:20:37', 4.00, 'NEM', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Nữ'),
+(5, 1, 'Giày Adidas Ultraboost', 'Đôi giày chạy bộ cao cấp với công nghệ Boost độc quyền, mang đến độ đàn hồi tối ưu và cảm giác êm ái cho mỗi bước chạy. Phù hợp cả khi luyện tập lẫn đi chơi.', 3500000.00, 35.00, 25, 'images/image1.jpg', '2025-11-07 11:08:07', 5.00, 'Adidas', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex'),
+(6, 1, 'Giày Nike Air Zoom', 'Thiết kế siêu nhẹ cùng công nghệ Air Zoom phản hồi lực nhanh, hỗ trợ tốc độ và giảm sốc hiệu quả. Lý tưởng cho các runner muốn cải thiện thành tích.', 2800000.00, 20.00, 18, 'images/image2.jpg', '2025-11-07 11:08:07', 1.00, 'Nike', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex'),
+(7, 2, 'Áo Thun Adidas Performance', 'Áo thun với chất liệu cotton thoáng khí, thấm hút mồ hôi nhanh, đảm bảo thoải mái khi vận động. Phù hợp mặc tập gym hoặc phong cách thường ngày năng động.', 500000.00, 30.00, 40, 'images/image3.jpg', '2025-11-07 11:08:07', 2.00, 'Adidas', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Nam'),
+(8, 2, 'Áo Polo NEM Sport', 'Áo polo thể thao với form dáng trẻ trung, lịch sự, dễ phối đồ. Chất liệu mềm mại, co giãn tốt, giúp bạn tự tin trong mọi hoạt động.', 450000.00, 5.00, 35, 'images/image4.jpg', '2025-11-07 11:08:07', 3.00, 'NEM', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Nam'),
+(9, 3, 'Mũ Lưỡi Trai NEM', 'Mũ lưỡi trai phong cách trẻ trung, giúp che nắng hiệu quả đồng thời tạo điểm nhấn cho outfit của bạn. Chất liệu bền bỉ, thoáng khí.', 200000.00, 10.00, 60, 'images/image5.jpg', '2025-11-07 11:08:07', 4.00, 'NEM', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex'),
+(10, 3, 'Vớ NEM Pack 3', 'Combo ba đôi vớ thể thao mềm mại, ôm chân và thấm hút mồ hôi tốt. Giúp bảo vệ bàn chân trong quá trình tập luyện hoặc đi lại hằng ngày.', 150000.00, 8.00, 100, 'images/image6.jpg', '2025-11-07 11:08:07', 5.00, 'NEM', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex'),
+(11, 4, 'Giày Gucci Loafer', 'Giày da cao cấp mang phong cách Ý tinh tế. Form dáng sang trọng, phù hợp dùng trong các sự kiện hoặc phối với trang phục lịch lãm.', 15000000.00, 20.00, 10, 'images/image7.jpg', '2025-11-07 11:08:07', 1.00, 'Gucci', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Nam'),
+(12, 4, 'Giày Louis Vuitton Sneaker', 'Sneaker thời thượng với logo LV mang tính biểu tượng. Kết hợp hoàn hảo giữa thời trang cao cấp và cảm giác thoải mái khi sử dụng.', 12000000.00, 25.00, 8, 'images/image8.jpg', '2025-11-07 11:08:07', 2.00, 'Louis Vuitton', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex'),
+(13, 5, 'Giày Sandal Nike Slide', 'Sandal nhẹ và êm, dễ mang, phù hợp sử dụng đi biển, đi dạo hoặc mang trong nhà. Đế chống trơn và ôm chân chắc chắn.', 800000.00, 25.00, 50, 'images/image9.jpg', '2025-11-07 11:08:07', 3.00, 'Nike', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex'),
+(14, 5, 'Giày Sandal Adidas Adilette', 'Thiết kế sandal đơn giản nhưng tinh tế, mang lại cảm giác thoải mái tối đa. Đế EVA chống trượt, phù hợp cho cả đi chơi và đi biển.', 700000.00, 30.00, 45, 'images/image10.jpg', '2025-11-07 11:08:07', 4.00, 'Adidas', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex'),
+(15, 6, 'Giày Boots Timberland', 'Boots da chính hãng với khả năng chống nước, độ bền vượt trội và phong cách mạnh mẽ. Phù hợp đi phượt hoặc phối đồ cá tính.', 4000000.00, 15.00, 20, 'images/image11.jpg', '2025-11-07 11:08:07', 5.00, 'Timberland', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Nữ'),
+(16, 6, 'Giày Boots Dr. Martens', 'Thiết kế cổ điển mang phong cách punk, chất da bền và sole cao su chống mài mòn. Dễ phối với cả streetwear hoặc thời trang cá tính.', 3500000.00, 25.00, 15, 'images/image12.jpg', '2025-11-07 11:08:07', 1.00, 'Dr. Martens', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex'),
+(17, 7, 'Quần Short Adidas', 'Quần short thể thao co giãn 4 chiều, nhẹ và thoáng. Hỗ trợ chuyển động linh hoạt khi chạy bộ, gym hoặc hoạt động ngoài trời.', 600000.00, 30.00, 30, 'images/image13.jpg', '2025-11-07 11:08:07', 2.00, 'Adidas', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Nam'),
+(18, 7, 'Quần Jogger NEM', 'Quần jogger với chất vải mềm mại, thoải mái, phù hợp tập luyện hoặc mặc hằng ngày theo phong cách athleisure.', 550000.00, 25.00, 25, 'images/image14.jpg', '2025-11-07 11:08:07', 3.00, 'NEM', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex'),
+(19, 8, 'Áo Khoác Nike Windrunner', 'Áo khoác chống gió nhẹ, thiết kế thời thượng và dễ phối đồ. Vừa phù hợp tập luyện ngoài trời, vừa dùng hàng ngày vẫn đẹp.', 1500000.00, 35.00, 20, 'images/image15.jpg', '2025-11-07 11:08:07', 4.00, 'Nike', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex'),
+(20, 8, 'Áo Khoác Adidas ZNE', 'Áo khoác thể thao cao cấp với lớp vải giữ ấm, siêu mềm và thoải mái. Mang phong cách hiện đại và chắc chắn.', 1800000.00, 30.00, 18, 'images/image16.jpg', '2025-11-07 11:08:07', 5.00, 'Adidas', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Nữ'),
+(21, 9, 'Vớ Nike Elite', 'Vớ bóng rổ thiết kế hỗ trợ cổ chân, tăng độ bám và độ êm khi vận động mạnh. Phù hợp cho thể thao chuyên nghiệp.', 250000.00, 30.00, 80, 'images/image17.jpg', '2025-11-07 11:08:07', 1.00, 'Nike', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex'),
+(22, 9, 'Vớ Adidas Cushioned', 'Vớ chạy bộ với lớp đệm êm, giảm ma sát và giãn tốt, giúp chân luôn dễ chịu trong suốt cả ngày.', 200000.00, 50.00, 70, 'images/image18.jpg', '2025-11-07 11:08:07', 2.00, 'Adidas', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex'),
+(23, 10, 'Balo Nike Sport', 'Balo thể thao dung tích lớn với nhiều ngăn tiện dụng, phù hợp đi học, đi gym hoặc du lịch nhẹ. Đệm lưng êm và thoáng.', 1200000.00, 60.00, 50, 'images/image19.jpg', '2025-11-07 11:08:07', 3.00, 'Nike', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex'),
+(24, 10, 'Balo Adidas Backpack', 'Thiết kế balo bền bỉ, chống nước nhẹ và mang phong cách hiện đại. Dây đeo êm vai, phù hợp sử dụng hàng ngày.', 1000000.00, 70.00, 45, 'images/image20.jpg', '2025-11-07 11:08:07', 4.00, 'Adidas', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex'),
+(25, 1, 'Giày Puma RS-X', 'Sneaker phong cách retro kết hợp màu sắc trẻ trung cá tính. Phù hợp với các outfit streetwear năng động.', 2500000.00, 80.00, 22, 'images/image21.jpg', '2025-11-07 11:08:07', 5.00, 'Puma', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Nam'),
+(26, 2, 'Áo Tank Top NEM', 'Áo ba lỗ thể thao thoáng khí, phù hợp tập gym hoặc mặc trong thời tiết nóng. Thiết kế gọn gàng, tôn dáng.', 300000.00, 0.00, 50, 'images/image22.jpg', '2025-11-07 11:08:07', 0.00, 'NEM', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex'),
+(27, 3, 'Túi Đeo Chéo NEM', 'Túi đeo chéo nhỏ gọn, tiện dụng để mang điện thoại, ví và phụ kiện cá nhân. Thời trang và dễ phối theo phong cách streetwear.', 400000.00, 0.00, 35, 'images/image23.jpg', '2025-11-07 11:08:07', 0.00, 'NEM', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex'),
+(28, 4, 'Giày Prada Derby', 'Giày da bóng cao cấp, phù hợp sự kiện trang trọng hoặc môi trường công sở sang trọng. Đẳng cấp và tinh tế.', 18000000.00, 0.00, 5, 'images/image24.jpg', '2025-11-07 11:08:07', 0.00, 'Prada', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Nữ'),
+(29, 5, 'Giày Sandal Crocs Classic', 'Thiết kế nhẹ, thoải mái và dễ vệ sinh. Phù hợp đi lại hằng ngày, đặc biệt cho mùa hè.', 600000.00, 0.00, 60, 'images/image25.jpg', '2025-11-07 11:08:07', 0.00, 'Crocs', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex'),
+(30, 6, 'Giày Boots Chelsea', 'Boots da mịn, cổ ngắn, dễ phối với cả outfit lịch sự hoặc casual. Mang phong cách tinh tế và tối giản.', 3000000.00, 0.00, 12, 'images/image26.jpg', '2025-11-07 11:08:07', 0.00, 'NEM', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex'),
+(31, 7, 'Quần Legging NEM', 'Legging co giãn cao, ôm dáng tốt, phù hợp tập gym, yoga hoặc mặc hằng ngày. Mang lại cảm giác nhẹ và thoải mái.', 450000.00, 0.00, 40, 'images/image27.jpg', '2025-11-07 11:08:07', 0.00, 'NEM', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Nữ'),
+(32, 8, 'Áo Khoác Puma Essentials', 'Thiết kế basic, mềm nhẹ, dễ phối đồ và phù hợp mặc trong nhiều hoàn cảnh. Phong cách thể thao trẻ trung.', 1200000.00, 0.00, 25, 'images/image28.jpg', '2025-11-07 11:08:07', 0.00, 'Puma', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex'),
+(33, 9, 'Vớ Puma Quarter', 'Vớ ngắn, ôm chân vừa vặn, phù hợp đi sneaker. Chất liệu mềm, thấm hút tốt, giúp chân luôn khô thoáng.', 150000.00, 0.00, 85, 'images/image29.jpg', '2025-11-07 11:08:07', 0.00, 'Puma', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex'),
+(34, 10, 'Balo NEM Travel', 'Balo đa ngăn dung tích lớn, phù hợp mang theo khi đi học, đi tập hoặc du lịch. Thiết kế hiện đại, tiện dụng và bền bỉ.', 800000.00, 0.00, 60, 'images/image30.jpg', '2025-11-07 11:08:07', 0.00, 'NEM', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex'),
+(39, 1, 'Nike Air Force 1', 'Nike Air Force 1 là đôi sneaker biểu tượng của văn hoá đường phố, nổi bật với thiết kế tối giản nhưng đầy mạnh mẽ. Ra mắt lần đầu năm 1982, AF1 đã trở thành huyền thoại nhờ sự kết hợp hoàn hảo giữa phong cách cổ điển và sự thoải mái hiện đại.\n\nĐôi giày sở hữu phần upper bằng da cao cấp, mang lại độ bền vượt trội và khả năng giữ form tốt theo thời gian. Đế giữa được trang bị công nghệ Nike Air giúp giảm chấn êm ái, tạo cảm giác bước đi nhẹ nhàng suốt cả ngày. Đế ngoài bằng cao su được thiết kế họa tiết vòng tròn đặc trưng giúp tăng độ bám và độ ổn định trên nhiều bề mặt.\n\nVới vẻ đẹp đơn giản nhưng đầy cá tính, Nike Air Force 1 dễ dàng kết hợp với mọi outfit từ năng động, casual đến streetwear. Đây là lựa chọn hoàn hảo cho những ai yêu thích sự bền bỉ, thoải mái và phong cách thời trang không bao giờ lỗi thời.', 5000000.00, 15.00, 50, 'images/image31.jpg', '2025-11-14 01:20:12', 0.00, 'Nike', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex'),
+(40, 1, 'Nike Air Force 2', 'Nike Air Force 2 là đôi sneaker biểu tượng của văn hoá đường phố, nổi bật với thiết kế tối giản nhưng đầy mạnh mẽ. Ra mắt lần đầu năm 1982, AF1 đã trở thành huyền thoại nhờ sự kết hợp hoàn hảo giữa phong cách cổ điển và sự thoải mái hiện đại.\r\n\r\nĐôi giày sở hữu phần upper bằng da cao cấp, mang lại độ bền vượt trội và khả năng giữ form tốt theo thời gian. Đế giữa được trang bị công nghệ Nike Air giúp giảm chấn êm ái, tạo cảm giác bước đi nhẹ nhàng suốt cả ngày. Đế ngoài bằng cao su được thiết kế họa tiết vòng tròn đặc trưng giúp tăng độ bám và độ ổn định trên nhiều bề mặt.\r\n\r\nVới vẻ đẹp đơn giản nhưng đầy cá tính, Nike Air Force 1 dễ dàng kết hợp với mọi outfit từ năng động, casual đến streetwear. Đây là lựa chọn hoàn hảo cho những ai yêu thích sự bền bỉ, thoải mái và phong cách thời trang không bao giờ lỗi thời.', 6000000.00, 20.00, 60, 'images/image32.jpg', '2025-11-16 19:02:35', 0.00, 'Nike', 'S,M,L,XL,XXL,XXXL', 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu', 'Unisex');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `reviews`
+--
+
+CREATE TABLE `reviews` (
+  `review_id` int(11) NOT NULL,
+  `product_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `rating` int(11) DEFAULT NULL CHECK (`rating` between 1 and 5),
+  `comment` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `reviews`
+--
+
+INSERT INTO `reviews` (`review_id`, `product_id`, `user_id`, `rating`, `comment`, `created_at`) VALUES
+(1, 1, 1, 5, 'Rất thoải mái và bền', '2025-11-05 17:20:37'),
+(2, 2, 2, 4, 'Giày đẹp, giao hàng nhanh', '2025-11-05 17:20:37'),
+(3, 3, 3, 5, 'Áo thấm hút tốt, form ổn', '2025-11-05 17:20:37'),
+(4, 4, 4, 5, 'Túi tiện lợi, chất lượng cao', '2025-11-05 17:20:37'),
+(5, 5, 1, 5, 'Đôi Ultraboost này cực kỳ êm, chạy rất sướng.', '2025-11-12 16:49:40'),
+(6, 6, 2, 4, 'Giày nhẹ, thoáng khí, nhưng giá hơi cao.', '2025-11-12 16:49:40'),
+(7, 7, 3, 5, 'Áo thun đẹp, thấm hút mồ hôi tốt.', '2025-11-12 16:49:40'),
+(8, 8, 4, 4, 'Áo polo vừa vặn, form chuẩn, chất vải mềm.', '2025-11-12 16:49:40'),
+(9, 9, 1, 5, 'Mũ chất lượng, đeo thoáng và nhẹ.', '2025-11-12 16:49:40'),
+(10, 10, 2, 5, 'Vớ rất êm, đi giày không bị trượt chân.', '2025-11-12 16:49:40'),
+(11, 11, 3, 5, 'Giày Gucci nhìn cực sang, đáng tiền.', '2025-11-12 16:49:40'),
+(12, 12, 4, 4, 'Giày LV đẹp, nhưng hơi chật form so với size.', '2025-11-12 16:49:40'),
+(13, 13, 1, 5, 'Sandal đi trong nhà rất thoải mái.', '2025-11-12 16:49:40'),
+(14, 14, 2, 5, 'Sandal nhẹ, dễ mang, giao hàng nhanh.', '2025-11-12 16:49:40'),
+(15, 15, 3, 4, 'Boots đi cực ngầu, hợp đi phượt.', '2025-11-12 16:49:40'),
+(16, 16, 4, 5, 'Dr. Martens chất lượng tốt, bền bỉ.', '2025-11-12 16:49:40'),
+(17, 19, 1, 5, 'Áo khoác nhẹ, mặc rất dễ chịu.', '2025-11-12 16:49:40'),
+(18, 20, 2, 4, 'Áo khoác ấm và đẹp, nhưng hơi dày.', '2025-11-12 16:49:40'),
+(19, 23, 3, 5, 'Balo đựng được nhiều đồ, rất tiện khi đi tập.', '2025-11-12 16:49:40'),
+(20, 24, 4, 5, 'Balo đẹp, bền, giao nhanh, rất hài lòng.', '2025-11-12 16:49:40');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `users`
+--
+
+CREATE TABLE `users` (
+  `user_id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `fullname` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `phone` varchar(15) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `role` enum('customer','admin') DEFAULT 'customer',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `users`
+--
+
+INSERT INTO `users` (`user_id`, `username`, `password`, `fullname`, `email`, `phone`, `address`, `role`, `created_at`) VALUES
+(1, 'nguyenvana', '123456', 'Nguyễn Văn A', 'a@gmail.com', '0901111222', 'Hà Nội', 'customer', '2025-11-05 17:20:37'),
+(2, 'tranthib', '123456', 'Trần Thị B', 'b@gmail.com', '0903333444', 'TP.HCM', 'customer', '2025-11-05 17:20:37'),
+(3, 'levanc', '123456', 'Lê Văn C', 'c@gmail.com', '0905555666', 'Đà Nẵng', 'customer', '2025-11-05 17:20:37'),
+(4, 'admin', 'admin123', 'Admin NEM', 'admin@gmail.com', '0907777888', 'Hà Nội', 'admin', '2025-11-05 17:20:37'),
+(5, 'Vu Duc Huy', '$2b$10$b8NSclDO3GJjckqpjtfS9OAmqGfhdn9CW0Cx89eEcBaAQw9qL3TFK', 'Vu Duc Huy', 'vuduchuy2072004@gmail.com', '0965904537', '60B Lạc Long Quân', 'customer', '2025-11-06 15:39:23'),
+(6, 'admin1', '$2b$10$x77vW7Xs6fV1.JyU/uYlOuleKNWnngTh2DQpEP3IDhjpKHnU9iDXy', 'Admin Chính', 'Admin1@gmail.com', '0501200523', 'Hà Nội', 'admin', '2025-11-07 11:48:58'),
+(9, 'Huyen', '$2b$10$X3O9nFQqZOS3rvujy3WjFe6//8kcys8aKuSbJDtFjh6I3xrBCZFL.', 'Nguyễn Thị Ngọc Huyền', 'embetrasua@gmail.com', '05012005', 'Trong tim anh', 'customer', '2025-11-13 13:11:12'),
+(10, 'Chien', '$2b$10$G47g0ths422zoycteVRjCenCg/cPcmnlp1bLLIX/Yxij2MX7zAFuy', 'Hoàng Đức Chiến', '18@gmail.com', '6969696969', 'Hải Phòng', 'customer', '2025-11-16 19:04:43');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `wishlists`
+--
+
+CREATE TABLE `wishlists` (
+  `wishlist_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `product_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `wishlists`
+--
+
+INSERT INTO `wishlists` (`wishlist_id`, `user_id`, `product_id`) VALUES
+(5, 5, 3),
+(6, 5, 18),
+(4, 6, 3);
+
+--
+-- Chỉ mục cho các bảng đã đổ
+--
+
+--
+-- Chỉ mục cho bảng `carts`
+--
+ALTER TABLE `carts`
+  ADD PRIMARY KEY (`cart_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Chỉ mục cho bảng `cart_items`
+--
+ALTER TABLE `cart_items`
+  ADD PRIMARY KEY (`cart_item_id`),
+  ADD KEY `cart_id` (`cart_id`),
+  ADD KEY `product_id` (`product_id`);
+
+--
+-- Chỉ mục cho bảng `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`category_id`);
+
+--
+-- Chỉ mục cho bảng `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`order_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Chỉ mục cho bảng `order_items`
+--
+ALTER TABLE `order_items`
+  ADD PRIMARY KEY (`order_item_id`),
+  ADD KEY `order_id` (`order_id`),
+  ADD KEY `product_id` (`product_id`);
+
+--
+-- Chỉ mục cho bảng `posts`
+--
+ALTER TABLE `posts`
+  ADD PRIMARY KEY (`post_id`);
+
+--
+-- Chỉ mục cho bảng `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`product_id`),
+  ADD KEY `category_id` (`category_id`);
+
+--
+-- Chỉ mục cho bảng `reviews`
+--
+ALTER TABLE `reviews`
+  ADD PRIMARY KEY (`review_id`),
+  ADD KEY `product_id` (`product_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Chỉ mục cho bảng `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`user_id`),
+  ADD UNIQUE KEY `username` (`username`);
+
+--
+-- Chỉ mục cho bảng `wishlists`
+--
+ALTER TABLE `wishlists`
+  ADD PRIMARY KEY (`wishlist_id`),
+  ADD UNIQUE KEY `unique_wish` (`user_id`,`product_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `product_id` (`product_id`);
+
+--
+-- AUTO_INCREMENT cho các bảng đã đổ
+--
+
+--
+-- AUTO_INCREMENT cho bảng `carts`
+--
+ALTER TABLE `carts`
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT cho bảng `cart_items`
+--
+ALTER TABLE `cart_items`
+  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT cho bảng `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT cho bảng `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT cho bảng `order_items`
+--
+ALTER TABLE `order_items`
+  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT cho bảng `posts`
+--
+ALTER TABLE `posts`
+  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT cho bảng `products`
+--
+ALTER TABLE `products`
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+
+--
+-- AUTO_INCREMENT cho bảng `reviews`
+--
+ALTER TABLE `reviews`
+  MODIFY `review_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT cho bảng `users`
+--
+ALTER TABLE `users`
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT cho bảng `wishlists`
+--
+ALTER TABLE `wishlists`
+  MODIFY `wishlist_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- Các ràng buộc cho các bảng đã đổ
+--
+
+--
+-- Các ràng buộc cho bảng `carts`
+--
+ALTER TABLE `carts`
+  ADD CONSTRAINT `carts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+
+--
+-- Các ràng buộc cho bảng `cart_items`
+--
+ALTER TABLE `cart_items`
+  ADD CONSTRAINT `cart_items_ibfk_1` FOREIGN KEY (`cart_id`) REFERENCES `carts` (`cart_id`),
+  ADD CONSTRAINT `cart_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`);
+
+--
+-- Các ràng buộc cho bảng `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+
+--
+-- Các ràng buộc cho bảng `order_items`
+--
+ALTER TABLE `order_items`
+  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`),
+  ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`);
+
+--
+-- Các ràng buộc cho bảng `products`
+--
+ALTER TABLE `products`
+  ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`);
+
+--
+-- Các ràng buộc cho bảng `reviews`
+--
+ALTER TABLE `reviews`
+  ADD CONSTRAINT `reviews_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`),
+  ADD CONSTRAINT `reviews_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+
+--
+-- Các ràng buộc cho bảng `wishlists`
+--
+ALTER TABLE `wishlists`
+  ADD CONSTRAINT `wishlists_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `wishlists_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

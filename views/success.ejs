@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Thanh toán thành công</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('partials/header') %>
+  <div class="site-wrapper" style="display: flex; justify-content: center; align-items: center; min-height: 60vh;">
+    <div class="card" style="width: 60%; max-width: 600px; padding: 30px; text-align: center;">
+      <h1 style="margin-bottom: 20px;">🎉 Thanh toán thành công!</h1>
+      <p><b>Khách hàng:</b> <%= fullname %></p>
+      <p><b>Địa chỉ:</b> <%= address %></p>
+      <p><b>Số điện thoại:</b> <%= phone %></p>
+      <p><b>Tổng tiền:</b> <%= totalAmount.toLocaleString('vi-VN') %> đ</p>
+      <h3 style="margin-top: 20px;">Cảm ơn bạn đã mua hàng tại NEM Shoe Store!</h3>
+      <a href="/" class="btn-primary" style="display: inline-block; padding: 14px 20px; margin-top: 20px; font-size: 16px;">← Quay lại trang chủ</a>
+    </div>
+  </div>
+  <%- include('partials/footer') %>
+</body>
+</html>

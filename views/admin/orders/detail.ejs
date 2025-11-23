@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Chi tiết đơn</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="site-wrapper" style="display: flex; flex-direction: column; align-items: center; min-height: 60vh;">
+    <h1 style="text-align: center; margin-bottom: 20px;">Đơn #<%= order.order_id %></h1>
+    <div class="card" style="width: 80%; max-width: 800px; padding: 20px; margin-bottom: 20px; text-align: center;">
+      <p style="font-size: 16px; margin-bottom: 10px;">Khách: <%= order.fullname %> — <%= order.phone %> — <%= order.address %></p>
+      <p style="font-size: 16px; margin-bottom: 20px;">Trạng thái hiện tại: <b><%= order.status %></b></p>
+      <form action="/admin/orders/<%= order.order_id %>/status" method="POST" style="display: flex; justify-content: center; gap: 10px;">
+        <select name="status" style="padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+          <option value="Pending" <%= order.status==='Pending' ? 'selected' : '' %>>Pending</option>
+          <option value="Confirmed" <%= order.status==='Confirmed' ? 'selected' : '' %>>Confirmed</option>
+          <option value="Shipped" <%= order.status==='Shipped' ? 'selected' : '' %>>Shipped</option>
+          <option value="Delivered" <%= order.status==='Delivered' ? 'selected' : '' %>>Delivered</option>
+          <option value="Cancelled" <%= order.status==='Cancelled' ? 'selected' : '' %>>Cancelled</option>
+        </select>
+        <button type="submit" class="btn-primary" style="padding: 10px 20px; font-size: 16px;">Cập nhật</button>
+      </form>
+    </div>
+
+    <h3 style="text-align: center; margin-bottom: 10px;">Items</h3>
+    <table class="cart-table" style="width: 80%; max-width: 800px;">
+      <thead>
+        <tr>
+          <th>Sản phẩm</th>
+          <th>Số lượng</th>
+          <th>Giá</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% items.forEach(i => { %>
+          <tr>
+            <td><%= i.name %></td>
+            <td><%= i.quantity %></td>
+            <td><%= i.price.toLocaleString('vi-VN') %> đ</td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <a href="/admin/orders" style="margin-top: 20px; color: var(--muted);">Quay lại</a>
+  </div>
+  <%- include('../../partials/footer') %>
+</body>
+</html>

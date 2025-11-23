@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Chi tiết đơn hàng #<%= order.order_id %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <div class="site-wrapper">
+    <h1 class="center">Chi tiết đơn hàng #<%= order.order_id %></h1>
+
+    <div style="text-align:center;margin-bottom:12px">
+      <p><b>Ngày đặt:</b> <%= order.order_date %></p>
+      <p><b>Tổng tiền:</b> <%= order.total_amount.toLocaleString() %> đ</p>
+      <p><b>Trạng thái:</b> <%= order.status %></p>
+      <p><b>Phương thức:</b> <%= order.payment_method %></p>
+    </div>
+
+    <h3 style="margin-top:6px">Sản phẩm</h3>
+
+    <table class="cart-table">
+      <thead>
+        <tr>
+          <th>Hình</th>
+          <th>Tên</th>
+          <th>Số lượng</th>
+          <th>Giá</th>
+          <th>Tổng</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% items.forEach(i => { %>
+          <tr>
+            <td data-label="Hình"><img src="/<%= i.image %>" width="60" class="cart-image"></td>
+            <td data-label="Tên"><%= i.name %></td>
+            <td data-label="Số lượng"><%= i.quantity %></td>
+            <td data-label="Giá"><%= i.price.toLocaleString() %> đ</td>
+            <td data-label="Tổng"><%= (i.price * i.quantity).toLocaleString() %> đ</td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <div style="text-align:center;margin-top:18px"><a href="/profile/orders" class="btn-continue">← Quay lại lịch sử</a></div>
+  </div>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

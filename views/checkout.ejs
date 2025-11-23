@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Thanh toán</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('partials/header') %>
+  <div class="site-wrapper" style="display: flex; flex-direction: column; align-items: center; min-height: 60vh;">
+    <h1 style="text-align: center; margin-bottom: 20px;">🧾 Thanh toán đơn hàng</h1>
+
+    <!-- Phần hiển thị sản phẩm đã mua (table cart) -->
+    <table class="cart-table" style="width: 80%; max-width: 800px; margin-bottom: 30px;">
+      <thead>
+        <tr>
+          <th>Hình</th>
+          <th>Tên</th>
+          <th>Số lượng</th>
+          <th>Giá (sau giảm)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% cart.forEach(item => { %>
+          <%
+            const item_price_after = item.price * (1 - (item.discount || 0) / 100);
+            const item_total_after = item_price_after * item.quantity;
+          %>
+          <tr>
+            <td><img class="cart-image" src="/<%= item.image %>" alt="<%= item.name %>"></td>
+            <td><%= item.name %></td>
+            <td><%= item.quantity %></td>
+            <td><%= item_total_after.toLocaleString('vi-VN') %> đ</td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <!-- Phần nhập thông tin thanh toán (form) -->
+    <form action="/checkout" method="POST" style="width: 60%; max-width: 600px; display: flex; flex-direction: column; gap: 15px; text-align: center;">
+      <label>Họ tên:</label>
+      <input type="text" name="fullname" required style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+
+      <label>Địa chỉ:</label>
+      <input type="text" name="address" required style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+
+      <label>Số điện thoại:</label>
+      <input type="text" name="phone" required style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+
+      <label>Phương thức thanh toán:</label>
+      <select name="payment_method" required style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+        <option value="COD">COD (Thanh toán khi nhận hàng)</option>
+        <option value="VNPAY">VNPAY (Thanh toán online)</option>
+      </select>
+
+      <h3 style="margin-top: 20px;">Tổng tiền: <%= total.toLocaleString('vi-VN') %> đ</h3>
+
+      <button type="submit" class="btn-primary" style="padding: 14px; font-size: 16px;">✅ Xác nhận thanh toán</button>
+    </form>
+
+    <a href="/cart" style="margin-top: 20px; color: var(--muted);">← Quay lại giỏ hàng</a>
+  </div>
+  <%- include('partials/footer') %>
+</body>
+</html>

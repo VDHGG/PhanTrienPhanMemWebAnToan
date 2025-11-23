@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="site-wrapper" style="display: flex; justify-content: center; align-items: center; min-height: 60vh;">
+    <div class="card" style="width: 60%; max-width: 600px; padding: 30px; text-align: center;">
+      <h1 style="margin-bottom: 20px;">Admin Dashboard</h1>
+      <p style="font-size: 18px; margin-bottom: 10px;">Sản phẩm: <b><%= stats.productCount %></b></p>
+      <p style="font-size: 18px; margin-bottom: 10px;">Đơn hàng: <b><%= stats.orderCount %></b></p>
+      <p style="font-size: 18px; margin-bottom: 20px;">Người dùng: <b><%= stats.userCount %></b></p>
+      <div style="display: flex; justify-content: center; gap: 15px;">
+        <a href="/admin/products" class="btn-primary" style="padding: 14px 20px; font-size: 16px;">Quản lý sản phẩm</a>
+        <a href="/admin/orders" class="btn-primary" style="padding: 14px 20px; font-size: 16px;">Quản lý đơn hàng</a>
+        <a href="/admin/users" class="btn-primary" style="padding: 14px 20px; font-size: 16px;">Quản lý người dùng</a>
+      </div>
+    </div>
+  </div>
+  <%- include('../partials/footer') %>
+</body>
+</html>

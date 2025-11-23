@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Lịch sử đơn hàng</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <div class="site-wrapper">
+    <h1 class="center">Lịch sử đơn hàng</h1>
+
+    <% if (!orders || orders.length === 0) { %>
+      <p class="center text-muted">Bạn chưa có đơn hàng nào.</p>
+      <div style="text-align:center;margin-top:12px"><a href="/products" class="btn-continue">← Tiếp tục mua sắm</a></div>
+    <% } else { %>
+      <table class="cart-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Ngày đặt</th>
+            <th>Tổng tiền</th>
+            <th>Số items</th>
+            <th>Trạng thái</th>
+            <th>Chi tiết</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% orders.forEach(o => { %>
+            <tr>
+              <td data-label="ID"><%= o.order_id %></td>
+              <td data-label="Ngày đặt"><%= o.order_date %></td>
+              <td data-label="Tổng tiền"><%= o.total_amount.toLocaleString() %> đ</td>
+              <td data-label="Số items"><%= o.item_count %></td>
+              <td data-label="Trạng thái"><%= o.status %></td>
+              <td data-label="Chi tiết"><a class="btn-ghost" href="/profile/orders/<%= o.order_id %>">Xem</a></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+      <div style="text-align:center;margin-top:18px"><a href="/" class="btn-continue">← Quay lại trang chủ</a></div>
+    <% } %>
+  </div>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

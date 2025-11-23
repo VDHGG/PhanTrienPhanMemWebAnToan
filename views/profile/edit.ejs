@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Chỉnh sửa profile</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('../partials/header') %>
+  <div class="site-wrapper" style="display: flex; justify-content: center; align-items: center; min-height: 60vh;">
+    <div class="card" style="width: 60%; max-width: 600px; padding: 30px; text-align: center;">
+      <h1 style="margin-bottom: 20px;">Chỉnh sửa thông tin cá nhân</h1>
+      <form action="/profile" method="POST" style="display: flex; flex-direction: column; gap: 15px;">
+        <label>Họ tên:</label>
+        <input type="text" name="fullname" value="<%= user.fullname %>" required style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+
+        <label>Email:</label>
+        <input type="email" name="email" value="<%= user.email %>" required style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+
+        <label>Số điện thoại:</label>
+        <input type="text" name="phone" value="<%= user.phone %>" required style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+
+        <label>Địa chỉ:</label>
+        <input type="text" name="address" value="<%= user.address %>" required style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+
+        <label>Mật khẩu mới (bỏ trống nếu không đổi):</label>
+        <input type="password" name="password" style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+
+        <button type="submit" class="btn-primary" style="padding: 14px; font-size: 16px;">Lưu thay đổi</button>
+      </form>
+      <a href="/" style="margin-top: 15px; display: inline-block; color: var(--muted);">Quay lại trang chủ</a>
+    </div>
+  </div>
+  <%- include('../partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<header>
+  <div class="site-wrapper">
+    <div class="nav">
+      <div class="brand">
+        <a href="/">
+          <img src="/images/NEM_Sport_Fashion.png" alt="NEM Logo">
+        </a>
+        <span>NEM Sport Fashion</span>
+      </div>
+
+      <form action="/products" method="GET" style="flex:1;display:flex;justify-content:center;">
+        <input type="text" name="search" placeholder="Tìm kiếm sản phẩm..." style="padding:10px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);width:420px;background:transparent;color:var(--white)">
+        <button type="submit" class="btn-primary" style="margin-left:8px;padding:10px 14px;font-size:14px">Tìm</button>
+      </form>
+
+      <div class="links">
+        <% if (session && session.user) { %>
+          <span style="color:var(--muted);margin-right:8px">👋 <%= session.user.fullname %></span>
+          <% if (session.user.role === 'admin') { %>
+            <a href="/admin">Admin</a>
+          <% } %>
+          <a href="/logout">Đăng xuất</a>
+        <% } else { %>
+          <a href="/login">Đăng nhập</a>
+          <a href="/register">Đăng ký</a>
+        <% } %>
+      </div>
+    </div>
+
+    <nav style="margin-top:12px; display:flex; justify-content:center; gap:28px;">
+      <a href="/">🏠 Trang chủ</a>
+      <a href="/products">🛍️ Tất cả sản phẩm</a>
+      <a href="/cart">🛒 Giỏ hàng</a>
+      <% if (session && session.user) { %>
+        <a href="/wishlist">❤️ Yêu thích</a>
+        <a href="/profile/orders">📦 Đơn hàng</a>
+        <a href="/profile">👤 Profile</a>
+      <% } %>
+    </nav>
+  </div>
+</header>

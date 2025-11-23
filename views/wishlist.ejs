@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Danh sách yêu thích</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('partials/header') %>
+
+  <div class="site-wrapper">
+    <h1 class="center">Danh sách yêu thích</h1>
+
+    <% if (!products || products.length === 0) { %>
+      <p class="center text-muted">Chưa có sản phẩm yêu thích.</p>
+    <% } else { %>
+      <div class="grid">
+        <% products.forEach(p => { %>
+          <div class="card">
+            <div class="thumb">
+              <a href="/products/<%= p.product_id %>"><img src="/<%= p.image %>" alt="<%= p.name %>"></a>
+            </div>
+            <div class="meta" style="text-align:center">
+              <div class="title"><a href="/products/<%= p.product_id %>" style="color:inherit;text-decoration:none"><%= p.name %></a></div>
+              <div class="price"><%= p.price.toLocaleString() %> đ</div>
+              <div class="actions" style="justify-content:center;margin-top:10px">
+                <form action="/cart/add" method="POST" style="margin:0">
+                  <input type="hidden" name="id" value="<%= p.product_id %>">
+                  <input type="hidden" name="price" value="<%= p.price %>">
+                  <input type="hidden" name="image" value="<%= p.image %>">
+                  <button class="btn-primary" type="submit" style="padding:8px 12px">Thêm vào giỏ</button>
+                </form>
+
+                <form action="/wishlist/remove/<%= p.product_id %>" method="GET" style="margin:0">
+                  <button class="btn-ghost" type="submit">Xóa</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+
+    <div style="text-align:center;margin-top:18px">
+      <a href="/products" class="btn-continue">← Tiếp tục mua sắm</a>
+    </div>
+  </div>
+
+  <%- include('partials/footer') %>
+</body>
+</html>

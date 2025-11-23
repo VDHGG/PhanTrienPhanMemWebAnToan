@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Tất cả sản phẩm - NEM Shoe Store</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* Bộ lọc giống cũ */
+    .filter-bar {
+      text-align: center;
+      margin-bottom: 20px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding: 14px;
+      border-radius: 12px;
+    }
+    .filters select {
+      padding: 8px 10px;
+      margin: 5px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: transparent;
+      color: var(--white);
+      font-weight: 500;
+    }
+    .filters select option {
+      background: var(--card);
+      color: var(--white);
+    }
+    .reset-btn {
+      padding: 8px 14px;
+      background: linear-gradient(90deg, rgba(255,107,53,0.3), rgba(0,212,255,0.1));
+      color: var(--white);
+      border: 1px solid rgba(255,107,53,0.2);
+      border-radius: 8px;
+      cursor: pointer;
+      margin-left: 10px;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    .reset-btn:hover { background: linear-gradient(90deg, rgba(255,107,53,0.4), rgba(0,212,255,0.15)); }
+    h1 { text-align: center; margin: 20px 0; font-size: 32px; }
+    /* Phân trang */
+    .pagination { display: flex; justify-content: center; gap: 10px; margin-top: 20px; }
+    .pagination a { padding: 10px 15px; border-radius: 8px; text-decoration: none; color: var(--white); background: var(--glass); transition: var(--transition); }
+    .pagination a:hover { background: var(--accent); transform: translateY(-2px); }
+    .pagination .disabled { pointer-events: none; opacity: 0.5; }
+  </style>
+</head>
+<body>
+
+<%- include('partials/header') %>
+
+  <div class="site-wrapper">
+  <!-- 🎚️ Bộ lọc -->
+  <div class="filter-bar">
+    <form class="filters" method="GET" action="/products">
+      <input type="hidden" name="page" value="<%= page %>"> <!-- Giữ page nếu filter -->
+      <select name="price" onchange="this.form.submit()">
+        <option value="">-- Lọc theo giá --</option>
+        <option value="<=500000" <%= price === '<=500000' ? 'selected' : '' %>>≤ 500.000đ</option>
+        <option value="500000-1000000" <%= price === '500000-1000000' ? 'selected' : '' %>>500.000đ - 1.000.000đ</option>
+        <option value=">=1000000" <%= price === '>=1000000' ? 'selected' : '' %>>≥ 1.000.000đ</option>
+      </select>
+
+      <select name="discount" onchange="this.form.submit()">
+        <option value="">-- Lọc theo giảm giá --</option>
+        <option value="<=10" <%= discount === '<=10' ? 'selected' : '' %>>≤ 10%</option>
+        <option value=">=30" <%= discount === '>=30' ? 'selected' : '' %>>≥ 30%</option>
+        <option value=">=50" <%= discount === '>=50' ? 'selected' : '' %>>≥ 50%</option>
+      </select>
+
+      <select name="stock" onchange="this.form.submit()">
+        <option value="">-- Lọc theo tồn kho --</option>
+        <option value="many" <%= stock === 'many' ? 'selected' : '' %>>Còn nhiều hàng</option>
+        <option value="few" <%= stock === 'few' ? 'selected' : '' %>>Còn ít hàng</option>
+        <option value="none" <%= stock === 'none' ? 'selected' : '' %>>Hết hàng</option>
+      </select>
+
+      <select name="gender" onchange="this.form.submit()">
+      <option value="">-- Lọc theo giới tính --</option>
+      <option value="Nam" <%= gender === 'Nam' ? 'selected' : '' %>>Nam</option>
+      <option value="Nữ" <%= gender === 'Nữ' ? 'selected' : '' %>>Nữ</option>
+      <option value="Unisex" <%= gender === 'Unisex' ? 'selected' : '' %>>Unisex</option>
+    </select>
+
+    <select name="provider" onchange="this.form.submit()">
+      <option value="">-- Lọc theo thương hiệu --</option>
+      <% providers.forEach(prov => { %>
+        <option value="<%= prov %>" <%= provider === prov ? 'selected' : '' %>><%= prov %></option>
+      <% }) %>
+    </select>
+
+      <!-- 🧹 Nút Xóa bộ lọc -->
+      <button type="button" class="reset-btn" onclick="window.location.href='/products'">Xóa bộ lọc</button>
+    </form>
+  </div>
+
+  <!-- 🧾 Kết quả sản phẩm -->
+  <div class="grid">
+    <% if (products.length === 0) { %>
+      <p>Không tìm thấy sản phẩm nào phù hợp.</p>
+    <% } else { %>
+      <% products.forEach(product => { %>
+        <%
+          // Tính giá sau giảm từ DB: price_after = price * (1 - discount/100)
+          const price_after = product.price * (1 - (product.discount || 0) / 100);
+        %>
+        <div class="card">
+          <% if (product.discount && product.discount > 0) { %>
+            <div class="ribbon"><%= Math.round(product.discount) %>% OFF</div>
+          <% } %>
+          <div class="thumb">
+            <a href="/products/<%= product.product_id %>">
+              <img src="/<%= product.image %>" alt="<%= product.name %>">
+            </a>
+          </div>
+          <div class="meta">
+            <div class="title"><a href="/products/<%= product.product_id %>" style="color:inherit;text-decoration:none"><%= product.name %></a></div>
+            <div class="price"><%= price_after.toLocaleString('vi-VN') %> đ <span class="old-price"><%= product.price.toLocaleString('vi-VN') %> đ</span></div>
+            <div class="actions">
+              <form action="/cart/add" method="POST" style="margin:0">
+                <input type="hidden" name="id" value="<%= product.product_id %>">
+                <input type="hidden" name="price" value="<%= product.price %>">
+                <button class="btn-ghost" type="submit">Thêm vào giỏ</button>
+              </form>
+              <a class="btn-ghost" href="/products/<%= product.product_id %>">Chi tiết</a>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    <% } %>
+  </div>
+
+  <!-- Phân trang -->
+  <div class="pagination">
+    <% if (page > 1) { %>
+      <a href="/products?page=<%= page - 1 %>&search=<%= search || '' %>&price=<%= price || '' %>&discount=<%= discount || '' %>&stock=<%= stock || '' %>&gender=<%= gender || '' %>&provider=<%= provider || '' %>">Previous</a>
+    <% } else { %>
+      <a class="disabled">Previous</a>
+    <% } %>
+
+    <% if (page < totalPages) { %>
+      <a href="/products?page=<%= page + 1 %>&search=<%= search || '' %>&price=<%= price || '' %>&discount=<%= discount || '' %>&stock=<%= stock || '' %>&gender=<%= gender || '' %>&provider=<%= provider || '' %>">Next</a>
+    <% } else { %>
+      <a class="disabled">Next</a>
+    <% } %>
+  </div>
+
+  </div> <!-- .site-wrapper -->
+<%- include('partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Đơn hàng</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* Bộ lọc giống products.ejs nhưng chỉ 2 */
+    .filter-bar {
+      text-align: center;
+      margin-bottom: 20px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding: 14px;
+      border-radius: 12px;
+    }
+    .filters select {
+      padding: 8px 10px;
+      margin: 5px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: transparent;
+      color: var(--white);
+      font-weight: 500;
+    }
+    .filters select option {
+      background: var(--card);
+      color: var(--white);
+    }
+    .reset-btn {
+      padding: 8px 14px;
+      background: linear-gradient(90deg, rgba(255,107,53,0.3), rgba(0,212,255,0.1));
+      color: var(--white);
+      border: 1px solid rgba(255,107,53,0.2);
+      border-radius: 8px;
+      cursor: pointer;
+      margin-left: 10px;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    .reset-btn:hover { background: linear-gradient(90deg, rgba(255,107,53,0.4), rgba(0,212,255,0.15)); }
+    .search-bar { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; }
+    .search-bar input { padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); width: 400px; background: transparent; color: var(--white); }
+    .search-bar button { padding: 10px 14px; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="site-wrapper" style="display: flex; flex-direction: column; align-items: center; min-height: 60vh;">
+    <h1 style="text-align: center; margin-bottom: 20px;">Quản lý đơn hàng</h1>
+      <a href="/admin" class="btn-ghost" style="padding: 14px 20px; font-size: 16px;">Dashboard</a>
+
+    <!-- Thanh tìm kiếm -->
+    <form class="search-bar" method="GET" action="/admin/orders">
+      <input type="text" name="search" placeholder="Tìm kiếm theo tên khách..." value="<%= search || '' %>" style="width: 420px;">
+      <button type="submit" class="btn-primary">Tìm kiếm</button>
+    </form>
+
+    <!-- Bộ lọc (giao diện giống, nhưng chỉ 2) -->
+    <div class="filter-bar">
+      <form class="filters" method="GET" action="/admin/orders">
+        <input type="hidden" name="search" value="<%= search || '' %>"> <!-- Giữ search nếu có -->
+        <select name="status" onchange="this.form.submit()">
+          <option value="">-- Lọc theo trạng thái --</option>
+          <option value="Pending" <%= status === 'Pending' ? 'selected' : '' %>>Pending</option>
+          <option value="Confirmed" <%= status === 'Confirmed' ? 'selected' : '' %>>Confirmed</option>
+          <option value="Shipped" <%= status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+          <option value="Delivered" <%= status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
+          <option value="Cancelled" <%= status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+        </select>
+
+        <select name="total" onchange="this.form.submit()">
+          <option value="">-- Lọc theo tổng tiền --</option>
+          <option value="<=5000000" <%= total === '<=5000000' ? 'selected' : '' %>>≤ 5 triệu</option>
+          <option value=">5000000" <%= total === '>5000000' ? 'selected' : '' %>>> 5 triệu</option>
+        </select>
+
+        <!-- Nút Xóa bộ lọc -->
+        <button type="button" class="reset-btn" onclick="window.location.href='<%= resetUrl %>'">Xóa bộ lọc</button>
+      </form>
+    </div>
+
+    <table class="cart-table" style="width: 80%; max-width: 1000px;">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Khách</th>
+          <th>Ngày</th>
+          <th>Tổng</th>
+          <th>Trạng thái</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% orders.forEach(o => { %>
+          <tr>
+            <td><%= o.order_id %></td>
+            <td><%= o.fullname %></td>
+            <td><%= o.order_date %></td>
+            <td><%= o.total_amount.toLocaleString('vi-VN') %> đ</td>
+            <td><%= o.status %></td>
+            <td style="display: flex; gap: 10px; justify-content: center;">
+              <a href="/admin/orders/<%= o.order_id %>" class="btn-ghost" style="padding: 8px 12px;">Xem</a>
+              <form action="/admin/orders/<%= o.order_id %>/delete" method="POST" style="display:inline;" onsubmit="return confirm('Bạn chắc chắn xóa đơn hàng này?');">
+                <button type="submit" class="btn-danger" style="padding: 8px 12px;">Xóa</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <%- include('../../partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,14 @@
+### Demo Tấn Công SSRF (Leak Data Internal)
+1. **Chuẩn bị**: Trong `app.js`, add route internal-secret -> phương thức giả cho việc đánh cắp được dữ liệu của tài khoản
+2. **Restart app**: Chạy `node app.js`.
+3. **Access vuln**: Login admin, vào /admin/fetch-image.
+4. **Exploit**: Input URL `http://127.0.0.1:3000/internal-secret` (hoặc `http://localhost:3000/internal-secret`), submit.
+5. **Kết quả**: Show leaked secret (e.g., "DB pass = (thông tin) "). Nếu direct browser access /internal-secret → 403 Forbidden demo fail
+6. **Record**: Ảnh/video + console log để report.
+
+### Advanced Exploit Demo: Scan Port
+1. **Chuẩn bị**: Giữ vuln fetch-image (sử dụng node-fetch hỗ trợ HTTP).
+2. **Test port open**: Input `http://127.0.0.1:3000/` → Success (show HTML app, time nhanh ~50ms ở console).
+3. **Test port closed**: Input `http://127.0.0.1:12345/` → Error "ECONNREFUSED" (time nhanh ~10ms).
+4. **Scan nhiều port**: Loop input như `http://127.0.0.1:80/`, `:22/`, `:3306/` (nếu DB run → banner leak nếu open).
+5. **Record**: Ảnh diff time/error cho open vs closed; explain attacker scan internal network qua blind timing.

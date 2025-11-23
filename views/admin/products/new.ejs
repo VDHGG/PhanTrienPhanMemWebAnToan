@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Thêm sản phẩm</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="site-wrapper" style="display: flex; justify-content: center; align-items: center; min-height: 60vh;">
+    <div class="card" style="width: 80%; max-width: 800px; padding: 30px; text-align: center;">
+      <h1 style="margin-bottom: 20px;">Thêm sản phẩm mới</h1>
+      <% if (errors && errors.length > 0) { %>
+        <ul style="color: red; list-style: none; padding: 0; margin-bottom: 15px;">
+          <% errors.forEach(err => { %>
+            <li><%= err %></li>
+          <% }) %>
+        </ul>
+      <% } %>
+      <form action="/admin/products/new" method="POST" style="display: flex; flex-direction: column; gap: 15px;">
+        <label>Danh mục:</label>
+        <select name="category_id" style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+          <option value="">Chưa chọn</option>
+          <% categories.forEach(c => { %>
+            <option value="<%= c.category_id %>" <%= formData && formData.category_id === c.category_id ? 'selected' : '' %>><%= c.category_name %></option>
+          <% }) %>
+        </select>
+        <label>Tên:</label>
+        <input name="name" value="<%= formData ? formData.name : '' %>" style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+        <label>Mô tả:</label>
+        <textarea name="description" style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px; min-height: 100px;"><%= formData ? formData.description : '' %></textarea>
+        <label>Giá:</label>
+        <input name="price" type="number" value="<%= formData ? formData.price : '' %>" style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+        <label>Giảm giá (%):</label>
+        <input name="discount" type="number" value="<%= formData ? formData.discount : '' %>" style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+        <label>Stock:</label>
+        <input name="stock" type="number" value="<%= formData ? formData.stock : '' %>" style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+        <label>Image (images/tenanh.jpg):</label>
+        <input name="image" value="<%= formData ? formData.image : '' %>" style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+        <label>Nhà cung cấp:</label>
+        <input name="provider" value="<%= formData ? formData.provider : '' %>" style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+        <label>Sizes (comma separated, e.g., S,M,L):</label>
+        <input name="sizes" value="<%= formData ? formData.sizes : 'S,M,L,XL,XXL,XXXL' %>" style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+        <label>Colors (comma separated, e.g., Đỏ,Xanh):</label>
+        <input name="colors" value="<%= formData ? formData.colors : 'Đỏ,Xanh dương,Xanh lá,Vàng,Cam,Tím,Hồng,Đen,Trắng,Nâu' %>" style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+        <label>Giới tính:</label>
+        <select name="gender" style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+          <option value="Nam" <%= (formData ? formData.gender : product.gender) === 'Nam' ? 'selected' : '' %>>Nam</option>
+          <option value="Nữ" <%= (formData ? formData.gender : product.gender) === 'Nữ' ? 'selected' : '' %>>Nữ</option>
+          <option value="Unisex" <%= (formData ? formData.gender : product.gender) === 'Unisex' ? 'selected' : '' %>>Unisex</option>
+        </select>
+        <button type="submit" class="btn-primary" style="padding: 14px; font-size: 16px; margin-top: 20px;">Tạo</button>
+      </form>
+      <a href="/admin/products" style="margin-top: 15px; display: inline-block; color: var(--muted);">Quay lại</a>
+    </div>
+  </div>
+  <%- include('../../partials/footer') %>
+</body>
+</html>

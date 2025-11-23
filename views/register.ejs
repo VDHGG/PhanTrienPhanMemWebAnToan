@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Đăng ký tài khoản</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('partials/header') %>
+  <div class="site-wrapper" style="display: flex; justify-content: center; align-items: center; min-height: 60vh;">
+    <div class="card" style="width: 60%; max-width: 600px; padding: 30px; text-align: center;">
+      <h1 style="margin-bottom: 20px;">Đăng ký tài khoản</h1>
+      <% if (errors && errors.length > 0) { %>
+        <ul style="color: red; list-style: none; padding: 0; margin-bottom: 15px;">
+          <% errors.forEach(err => { %>
+            <li><%= err %></li>
+          <% }) %>
+        </ul>
+      <% } %>
+      <form action="/register" method="POST" style="display: flex; flex-direction: column; gap: 15px;">
+        <input type="text" name="username" placeholder="Tên đăng nhập" value="<%= formData ? formData.username : '' %>" required style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+        <input type="password" name="password" placeholder="Mật khẩu" required style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+        <input type="text" name="fullname" placeholder="Họ tên" value="<%= formData ? formData.fullname : '' %>" required style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+        <input type="email" name="email" placeholder="Email (@gmail.com)" value="<%= formData ? formData.email : '' %>" required style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+        <input type="text" name="phone" placeholder="Số điện thoại" value="<%= formData ? formData.phone : '' %>" required style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+        <input type="text" name="address" placeholder="Địa chỉ" value="<%= formData ? formData.address : '' %>" required style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+        <button type="submit" class="btn-primary" style="padding: 14px; font-size: 16px;">Đăng ký</button>
+      </form>
+      <p style="margin-top: 15px; color: var(--muted);">Đã có tài khoản? <a href="/login" style="color: var(--accent);">Đăng nhập</a></p>
+    </div>
+  </div>
+  <%- include('partials/footer') %>
+</body>
+</html>

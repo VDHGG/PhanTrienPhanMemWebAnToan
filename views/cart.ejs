@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Giỏ hàng của bạn</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('partials/header') %>
+  <div style="text-align:center;margin:20px 0">
+    <h1 style="margin:0">🛍️ Giỏ hàng</h1>
+  </div>
+
+  <% if (cart.length === 0) { %>
+    <p style="text-align: center;">Giỏ hàng trống!</p>
+  <% } else { %>
+    <table class="cart-table">
+      <thead>
+        <tr>
+          <th>Hình ảnh</th>
+          <th>Tên sản phẩm</th>
+          <th>Size</th>
+          <th>Màu</th>
+          <th>Số lượng</th>
+          <th>Giá (sau giảm)</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% let total = 0; %>
+      <% cart.forEach((item, index) => { %>
+        <%
+          // Tính giá sau giảm cho item
+          const item_price_after = item.price * (1 - (item.discount || 0) / 100);
+          const item_total_after = item_price_after * item.quantity;
+          total += item_total_after;
+        %>
+        <tr>
+          <td><img class="cart-image" src="/<%= item.image %>" alt="<%= item.name %>"></td>
+          <td><%= item.name %></td>
+          <td><%= item.size ? item.size : '-' %></td>
+          <td><%= item.color ? item.color : '-' %></td>
+          <td><%= item.quantity %></td>
+          <td><%= item_total_after.toLocaleString('vi-VN') %> đ <span class="old-price" style="text-decoration:line-through;color:var(--muted);font-size:0.9em">(<%= (item.price * item.quantity).toLocaleString('vi-VN') %> đ)</span></td>
+          <td>
+            <button class="btn-danger" type="button" onclick="openDeleteModal(this)" data-index="<%= index %>" data-name="<%= item.name %>" data-size="<%= item.size || '' %>" data-color="<%= item.color || '' %>">❌ Xóa</button>
+          </td>
+        </tr>
+      <% }) %>
+
+      <tr>
+        <td colspan="5"><b>Tổng cộng</b></td>
+        <td colspan="2"><b><%= total.toLocaleString('vi-VN') %> đ</b></td>
+      </tr>
+      <tr>
+        <td colspan="7" style="text-align:center;">
+          <% if (session && session.user) { %>
+            <a href="/checkout">
+              <button class="btn-primary">💳 Thanh toán</button>
+            </a>
+          <% } else { %>
+            <a href="#" onclick="showModal(); return false;">
+              <button class="btn-primary">💳 Thanh toán</button>
+            </a>
+          <% } %>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  <% } %>
+
+  <div style="text-align:center;margin:20px 0">
+    <a href="/" class="btn-continue">← Tiếp tục mua hàng</a>
+  </div>
+
+  <!-- Modal thông báo -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <p>Quý Khách Vui Lòng Đăng Nhập hoặc Đăng Ký Tài Khoản Trước Khi Thanh Toán</p>
+      <button class="modal-button login-btn" onclick="window.location.href='/login'">Đăng Nhập</button>
+      <button class="modal-button register-btn" onclick="window.location.href='/register'">Đăng Ký</button>
+      <button class="modal-button cancel-btn" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Modal xác nhận xóa item -->
+  <div id="deleteConfirmModal" class="modal">
+    <div class="modal-content">
+      <p id="deleteMessage">Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?</p>
+      <button class="modal-button cancel-btn" onclick="closeDeleteModal();">Hủy</button>
+      <button class="modal-button" id="confirmDeleteBtn" style="background:#d9534f; color:#fff;" onclick="confirmDelete();">Xóa</button>
+    </div>
+  </div>
+
+  <script>
+    function showModal() {
+      document.getElementById('loginModal').style.display = 'block';
+    }
+    function closeModal() {
+      document.getElementById('loginModal').style.display = 'none';
+    }
+    window.onclick = function(event) {
+      let modal = document.getElementById('loginModal');
+      if (event.target == modal) {
+        modal.style.display = 'none';
+      }
+    }
+
+    // Delete confirm modal logic
+    let pendingDeleteIndex = null;
+    function openDeleteModal(btn) {
+      const idx = btn.getAttribute('data-index');
+      const name = btn.getAttribute('data-name') || '';
+      const size = btn.getAttribute('data-size') || '';
+      const color = btn.getAttribute('data-color') || '';
+      pendingDeleteIndex = idx;
+      let msg = `Bạn có chắc muốn xóa "${name}"`;
+      if (size) msg += ` - Size: ${size}`;
+      if (color) msg += ` - Màu: ${color}`;
+      msg += ' khỏi giỏ hàng?';
+      document.getElementById('deleteMessage').innerText = msg;
+      document.getElementById('deleteConfirmModal').style.display = 'block';
+    }
+    function closeDeleteModal() {
+      document.getElementById('deleteConfirmModal').style.display = 'none';
+      pendingDeleteIndex = null;
+    }
+    function confirmDelete() {
+      if (pendingDeleteIndex === null) return closeDeleteModal();
+      window.location.href = '/cart/remove/' + pendingDeleteIndex;
+    }
+    window.addEventListener('click', function(event) {
+      let modal = document.getElementById('deleteConfirmModal');
+      if (event.target == modal) {
+        modal.style.display = 'none';
+      }
+    });
+  </script>
+
+  <%- include('partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,24 @@
+EYS3PY3W2P
+26UY8RBYN9
+8Y2TT4YFH3
+GSXEK4MDVJ
+KEKB2DV3F3
+VT4D4CTWJJ
+VXH3E4EK8E
+M4G85RV8DN
+W5PS3KMYPY
+AEQXP9RYZT
+
+
+Cách kích hoạt vnpay để demo
+1. vào trang web ngrok lấy mã ngrok config add-authtoken 35i7R9ZRmJXmUhc59kjozXxurLB_51YSwnirwUmfDXa5Gfuik (có thể thay đổi mỗi lần restart)
+2. vào E:\TAI LIEU HOC TAP\ngrok-v3-stable-windows-amd64 và mở ngrok.exe ra và copy lệnh mới lấy được vào
+3. chạy tiếp câu lệnh sau để bắt đầu ngrok http 3000
+4. sau khi chạy thành công copy cái đường link URL (Forwarding) của trang web (có thể thay đổi mỗi lần restart) và ném vào file vnpay.js
+nhớ thêm đuôi checkout/vnpay-ipn và checkout/vnpay-return
+5. thong tin thanh toan
+- NCB
+- 9704198526191432198
+- NGUYEN VAN A
+- 07/15
+- 123456

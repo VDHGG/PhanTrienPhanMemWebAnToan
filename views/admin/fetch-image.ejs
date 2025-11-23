@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Demo SSRF Vuln</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="site-wrapper" style="display: flex; flex-direction: column; align-items: center; min-height: 60vh;">
+    <h1 style="text-align: center; margin-bottom: 20px;">Demo SSRF Vulnerable: Fetch External Image</h1>
+    <form action="/admin/fetch-image" method="POST" style="width: 60%; max-width: 600px; display: flex; flex-direction: column; gap: 15px; text-align: center;">
+      <label>Nhập URL hình ảnh (vuln: server sẽ fetch):</label>
+      <input type="text" name="url" placeholder="https://example.com/image.jpg" required style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+      <button type="submit" class="btn-primary" style="padding: 14px; font-size: 16px;">Fetch</button>
+    </form>
+
+    <% if (error) { %>
+      <p style="color: red; margin-top: 20px;">Error: <%= error %></p>
+    <% } %>
+    <% if (result) { %>
+      <p style="margin-top: 20px; color: var(--muted);">Kết quả fetch (snippet): <%= result %></p>
+    <% } %>
+
+    <a href="/admin" style="margin-top: 20px; color: var(--muted);">Quay lại Dashboard</a>
+  </div>
+</body>
+</html>

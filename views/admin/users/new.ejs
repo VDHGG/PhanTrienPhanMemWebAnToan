@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Thêm người dùng</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="site-wrapper" style="display: flex; justify-content: center; align-items: center; min-height: 60vh;">
+    <div class="card" style="width: 60%; max-width: 600px; padding: 30px; text-align: center;">
+      <h1 style="margin-bottom: 20px;">Thêm người dùng mới</h1>
+      <% if (errors && errors.length > 0) { %>
+        <ul style="color: red; list-style: none; padding: 0; margin-bottom: 15px;">
+          <% errors.forEach(err => { %>
+            <li><%= err %></li>
+          <% }) %>
+        </ul>
+      <% } %>
+      <form action="/admin/users/new" method="POST" style="display: flex; flex-direction: column; gap: 15px;">
+        <label>Username:</label>
+        <input name="username" value="<%= formData ? formData.username : '' %>" required style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+        <label>Password:</label>
+        <input name="password" type="password" required style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+        <label>Họ tên:</label>
+        <input name="fullname" value="<%= formData ? formData.fullname : '' %>" required style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+        <label>Email (@gmail.com):</label>
+        <input name="email" type="email" value="<%= formData ? formData.email : '' %>" required style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+        <label>SĐT:</label>
+        <input name="phone" value="<%= formData ? formData.phone : '' %>" required style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+        <label>Địa chỉ:</label>
+        <input name="address" value="<%= formData ? formData.address : '' %>" required style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+        <label>Role:</label>
+        <select name="role" style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); background: transparent; color: var(--white); font-size: 16px;">
+          <option value="customer" <%= formData && formData.role === 'customer' ? 'selected' : '' %>>customer</option>
+          <option value="admin" <%= formData && formData.role === 'admin' ? 'selected' : '' %>>admin</option>
+        </select>
+        <button type="submit" class="btn-primary" style="padding: 14px; font-size: 16px; margin-top: 20px;">Tạo</button>
+      </form>
+      <a href="/admin/users" style="margin-top: 15px; display: inline-block; color: var(--muted);">Quay lại</a>
+    </div>
+  </div>
+  <%- include('../../partials/footer') %>
+</body>
+</html>
